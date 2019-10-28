@@ -1,7 +1,6 @@
 ---
-title: "Flu"
+title: "Influenza Epidemic Curves"
 output: html_document
-date: 10/03/2019
 ---
 
 This project will examime the seasonality of inlfuenza in different regions in the world using country level influenza data.
@@ -35,9 +34,9 @@ flu_df = file_df %>%
   janitor::clean_names() %>% 
   mutate(year = as.factor(year),
          week = as.numeric(week),
-         ##Date is the last day of every epi week
+         #Date is the last day of every epi week
          date = edate) %>% 
-  ##Flu data originally listed by country, combining into influenza transmission zones.
+  #Flu data originally listed by country, combining into influenza transmission zones.
   group_by(fluregion, year, week, date) %>% 
   summarize(cases = sum(all_inf, na.rm = TRUE),
             h1 = sum(ah1, na.rm = TRUE),
@@ -47,7 +46,7 @@ flu_df = file_df %>%
             a_total = sum(inf_a, na.rm = TRUE),
             b_total = sum(inf_b, na.rm = TRUE),
             processed_samples = sum(spec_processed_nb, na.rm = TRUE),
-            ##These variables are the proportion of processed samples that test positive for influenza a or b respectively 
+            #These variables are the proportion of processed samples that test positive for influenza a or b respectively 
             inf_a_prop = sum(inf_a, na.rm = TRUE)/sum(spec_processed_nb, na.rm = TRUE),
             inf_b_prop = sum(inf_b, na.rm = TRUE)/sum(spec_processed_nb, na.rm = TRUE))
 ```
@@ -56,11 +55,11 @@ In order to to calculate rates, population data was obtained from the World Bank
 ```{r}
 pop_df = read_excel("./data/pop_data.xls", skip = 3) %>% 
   janitor::clean_names() %>% 
-  ##Selecting the specific year we are reading in.
+  #Selecting the specific year we are reading in.
   select(country, country_code, x2008:x2014) %>% 
   gather(key = year, value = pop, x2008:x2014) %>% 
   group_by(country) %>% 
-  ##Calculating the mean population for each country over the respective time period.
+  #Calculating the mean population for each country over the respective time period.
   summarize(mean_pop = mean(pop))
 ```
 
